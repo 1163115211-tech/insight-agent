@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>问数 / Insight Agent</title>
+<meta name="description" content="自然语言问数：看清 Agent 如何探查表结构、写 SQL、自修复、出图，并给出可追溯的结论。">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230D0F13'/%3E%3Cpath d='M11 8v16' stroke='%23565F6B' stroke-width='2'/%3E%3Ccircle cx='11' cy='11' r='2.6' fill='%23A0A9B5'/%3E%3Ccircle cx='11' cy='21' r='2.6' fill='%234C8DFF'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主内容</a>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+        <path d="M6.5 4v12" stroke="currentColor" stroke-width="1.3" opacity=".45"/>
+        <circle cx="6.5" cy="5.4" r="1.5" fill="currentColor" opacity=".6"/>
+        <circle cx="6.5" cy="10" r="1.5" fill="currentColor" opacity=".6"/>
+        <circle cx="6.5" cy="14.6" r="1.9" fill="var(--accent)"/>
+        <path d="M10.5 5.4h6M10.5 10h4.2M10.5 14.6h7" stroke="currentColor" stroke-width="1.3" opacity=".4"/>
+      </svg>
+      <span class="brand-name">问数</span>
+      <span class="brand-sep" aria-hidden="true">/</span>
+      <span class="brand-sub">Insight Agent</span>
+    </div>
+
+    <div class="topbar-right">
+      <span class="mode-chip" id="modeChip" data-mode="loading" title="正在连接后端">
+        <span class="mode-dot" aria-hidden="true"></span>
+        <span id="modeText">连接中</span>
+      </span>
+      <span class="thread" id="threadChip" hidden>
+        <span class="thread-label">会话</span>
+        <code class="thread-id" id="threadId">—</code>
+      </span>
+      <button class="btn btn-quiet" id="newThreadBtn" type="button" hidden>新会话</button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="composer" aria-label="提问">
+      <form class="ask" id="askForm" novalidate>
+        <div class="ask-field">
+          <label class="sr-only" for="question">你的问题</label>
+          <textarea id="question" name="question" rows="1" maxlength="4000"
+                    placeholder="用一句业务问题开始，例如：2026 年各渠道的 GMV 与退货率对比"
+                    spellcheck="false" autocomplete="off"></textarea>
+          <div class="ask-foot">
+            <span class="ask-hint" id="askHint">Ctrl + Enter 提交</span>
+            <button class="btn btn-primary" id="runBtn" type="submit" disabled>运行</button>
+          </div>
+        </div>
+
+        <div class="examples" role="group" aria-label="示例问题">
+          <span class="examples-label">试一试</span>
+          <button class="pill" type="button" data-question="2026 年各渠道的 GMV 与退货率对比">各渠道 GMV 与退货率</button>
+          <button class="pill" type="button" data-question="上个月各品类的退款率排名">上个月品类退款率</button>
+          <button class="pill" type="button" data-question="过去 12 个月客单价的走势">12 个月客单价走势</button>
+          <button class="pill" type="button" data-question="复购次数最多的前 10 位客户">复购 Top 10 客户</button>
+        </div>
+      </form>
+
+      <div class="pending" id="pendingBar" hidden>
+        <span class="pending-dot" aria-hidden="true"></span>
+        <span class="pending-text" id="pendingText">有一个执行确认在等你处理</span>
+        <button class="btn btn-quiet btn-small" id="pendingBtn" type="button">继续处理</button>
+      </div>
+    </section>
+
+    <div class="workbench">
+
+      <aside class="panel trace" aria-labelledby="traceTitle">
+        <div class="panel-head">
+          <h2 class="panel-title" id="traceTitle">执行轨迹</h2>
+          <div class="panel-meta">
+            <span id="traceCount" class="num">0 步</span>
+            <span class="meta-sep" aria-hidden="true"></span>
+            <span id="traceElapsed" class="num">—</span>
+          </div>
+        </div>
+        <div class="trace-scroll" id="traceScroll">
+          <div class="trace-empty" id="traceEmpty">
+            <p class="trace-empty-lead">提交问题后，节点会逐个点亮。</p>
+            <ol class="station-preview" aria-hidden="true">
+              <li>受理</li>
+              <li>看表</li>
+              <li>计划</li>
+              <li>写 SQL</li>
+              <li>校验</li>
+              <li>执行</li>
+              <li>出图</li>
+              <li>结论</li>
+            </ol>
+            <p class="trace-empty-foot">报错会原地标红并自动重试一次。</p>
+          </div>
+          <ol class="steps" id="stepList" aria-label="节点执行时间线"></ol>
+          <div class="live-row" id="liveRow" hidden aria-hidden="true">
+            <span class="live-dot"></span>
+            <span class="live-text" id="liveText">正在执行</span>
+            <span class="live-time num" id="liveTime"></span>
+          </div>
+        </div>
+        <div class="sr-only" id="liveStatus" aria-live="polite"></div>
+      </aside>
+
+      <section class="panel workspace" aria-label="分析结果">
+        <div class="sheet" id="sheet">
+          <div class="notice" id="notice" hidden>
+            <span class="notice-dot" aria-hidden="true"></span>
+            <span class="notice-text" id="noticeText"></span>
+            <button class="icon-btn" id="noticeClose" type="button" aria-label="关闭提示">
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <div class="empty-state" id="emptyState">
+            <p class="empty-title">问一句话，看它把数据跑出来。</p>
+            <p class="empty-sub">提交后，这里会按顺序出现它跑过的 SQL、结果集、图表和结论；左侧同步显示每个节点的耗时和细节。</p>
+            <ul class="empty-points">
+              <li>SQL 全文可见，不在黑盒里</li>
+              <li>执行失败会自动修复再试</li>
+              <li>需要确认的操作会暂停，等你选择</li>
+            </ul>
+          </div>
+
+          <div class="runner" id="runner" hidden aria-hidden="true">
+            <p class="runner-label" id="runnerLabel">正在执行 · 等待第一个节点</p>
+            <div class="sk sk-code"></div>
+            <div class="sk sk-line"></div>
+            <div class="sk sk-line sk-short"></div>
+            <div class="sk-table">
+              <div class="sk sk-cell"></div><div class="sk sk-cell"></div><div class="sk sk-cell"></div>
+              <div class="sk sk-cell"></div><div class="sk sk-cell"></div><div class="sk sk-cell"></div>
+              <div class="sk sk-cell"></div><div class="sk sk-cell"></div><div class="sk sk-cell"></div>
+            </div>
+          </div>
+
+          <article class="sheet-section answer" id="answerSection" hidden>
+            <p class="question-echo" id="questionEcho"></p>
+            <p class="answer-text" id="answerText"></p>
+          </article>
+
+          <section class="sheet-section" id="sqlSection" hidden>
+            <div class="section-head">
+              <h3 class="section-title">SQL</h3>
+              <div class="section-tools">
+                <span class="tag tag-quiet" id="sqlAttempt" hidden></span>
+                <button class="btn btn-quiet btn-small" id="copySql" type="button">
+                  <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><rect x="5.5" y="5.5" width="8" height="8" rx="1.6" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 5.5V4.2A1.7 1.7 0 008.8 2.5H4.2A1.7 1.7 0 002.5 4.2v4.6a1.7 1.7 0 001.7 1.7h1.3" stroke="currentColor" stroke-width="1.3"/></svg>
+                  <span>复制</span>
+                </button>
+              </div>
+            </div>
+            <div class="code-wrap"><pre class="code"><code id="sqlCode"></code></pre></div>
+          </section>
+
+          <section class="sheet-section" id="tableSection" hidden>
+            <div class="section-head">
+              <h3 class="section-title">结果</h3>
+              <span class="section-meta num" id="tableMeta"></span>
+            </div>
+            <div class="table-wrap" id="tableWrap" tabindex="0" aria-label="查询结果表格">
+              <table id="resultTable">
+                <caption class="sr-only">查询结果</caption>
+              </table>
+            </div>
+          </section>
+
+          <section class="sheet-section" id="chartSection" hidden>
+            <div class="section-head">
+              <h3 class="section-title">图表</h3>
+              <span class="section-meta" id="chartMeta"></span>
+            </div>
+            <div class="chart-wrap"><div id="chart" role="img" aria-label="查询结果图表"></div></div>
+            <p class="chart-fallback" id="chartFallback" hidden></p>
+          </section>
+
+          <dl class="metrics" id="metrics" hidden>
+            <div class="metric"><dt>Token</dt><dd class="num" id="mTokens">—</dd></div>
+            <div class="metric"><dt>成本</dt><dd class="num" id="mCost">—</dd></div>
+            <div class="metric"><dt>耗时</dt><dd class="num" id="mLatency">—</dd></div>
+            <div class="metric"><dt>尝试</dt><dd class="num" id="mAttempts">—</dd></div>
+          </dl>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<dialog class="approval" id="approvalDialog" aria-labelledby="approvalTitle">
+  <div class="approval-head">
+    <span class="tag tag-wait">待确认</span>
+    <h2 class="approval-title" id="approvalTitle">继续执行？</h2>
+    <p class="approval-question" id="approvalQuestion"></p>
+  </div>
+  <div class="approval-body" id="approvalBody">
+    <p class="approval-label">将执行的 SQL</p>
+    <pre class="code code-sm"><code id="approvalSql"></code></pre>
+  </div>
+  <div class="approval-actions" id="approvalActions"></div>
+  <p class="approval-note">未选择前不会继续执行；关闭此卡片后可在顶部「继续处理」。</p>
+</dialog>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<noscript><p class="noscript">这个页面需要 JavaScript 才能显示实时执行轨迹。</p></noscript>
+
+<script src="/static/echarts.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

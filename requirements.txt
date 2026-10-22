@@ -1,0 +1,23 @@
+# 运行依赖（版本为实际验证过的组合）
+langchain==1.2.12
+langchain-core==1.2.18
+langchain-openai==1.1.11
+langgraph==1.1.2
+langgraph-checkpoint==4.3.0
+langgraph-checkpoint-sqlite==3.1.2
+langsmith==0.11.1
+
+# Web
+fastapi==0.135.1
+uvicorn==0.46.0
+sse-starlette==3.3.4
+
+# 工具
+pydantic==2.12.5
+python-dotenv==1.2.1
+typer==0.24.1
+rich==14.3.3
+pandas==3.0.6
+
+# 测试
+pytest==9.0.3

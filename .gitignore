@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 密钥
+.env
+.env.local
+
+# 数据（由 insight/db/seed.py 生成，不入库）
+data/*.db
+data/*.db-journal
+data/*.sqlite
+data/*.sqlite-wal
+data/*.sqlite-shm
+
+# 评测明细（汇总结果入 docs/eval/summary.json，逐题明细不入库）
+docs/eval/*.jsonl
+docs/eval/*.html
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

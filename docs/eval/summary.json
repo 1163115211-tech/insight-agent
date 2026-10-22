@@ -1,0 +1,441 @@
+{
+  "generated_at": "2026-10-22T18:50:12",
+  "db": "C:\\Users\\11631\\Documents\\deepseek-harness\\default-workspace\\insight-agent\\data\\ecommerce.db",
+  "dataset": {
+    "n": 52,
+    "difficulty": {
+      "easy": 13,
+      "medium": 26,
+      "hard": 13
+    },
+    "tags": {
+      "单表聚合": 10,
+      "多表join": 15,
+      "时间序列": 8,
+      "窗口函数": 6,
+      "比率类": 5,
+      "复杂综合": 8
+    }
+  },
+  "configs": {
+    "graph": {
+      "n": 52,
+      "execution_accuracy": 0.8462,
+      "projection_accuracy": 0.9038,
+      "sql_valid_rate": 1.0,
+      "self_repair_success_rate": null,
+      "repaired_runs": 0,
+      "avg_attempts": 1.0,
+      "avg_prompt_tokens": 4132.3,
+      "avg_completion_tokens": 897.8,
+      "avg_total_tokens": 5030.1,
+      "avg_cost_cny": 0.0154,
+      "total_cost_cny": 0.8032,
+      "total_latency_ms": 383333,
+      "p50_latency_ms": 7377.0,
+      "p95_latency_ms": 9177.0,
+      "failure_categories": {
+        "结果不对": 8
+      },
+      "by_difficulty": {
+        "easy": {
+          "n": 13,
+          "execution_accuracy": 1.0,
+          "avg_attempts": 1.0
+        },
+        "medium": {
+          "n": 26,
+          "execution_accuracy": 0.8462,
+          "avg_attempts": 1.0
+        },
+        "hard": {
+          "n": 13,
+          "execution_accuracy": 0.6923,
+          "avg_attempts": 1.0
+        }
+      },
+      "correct": 44,
+      "exec_ok": 52,
+      "by_tag": {
+        "单表聚合": {
+          "n": 10,
+          "execution_accuracy": 1.0,
+          "projection_accuracy": 1.0,
+          "avg_attempts": 1.0
+        },
+        "复杂综合": {
+          "n": 8,
+          "execution_accuracy": 0.75,
+          "projection_accuracy": 0.875,
+          "avg_attempts": 1.0
+        },
+        "多表join": {
+          "n": 15,
+          "execution_accuracy": 0.8667,
+          "projection_accuracy": 0.9333,
+          "avg_attempts": 1.0
+        },
+        "时间序列": {
+          "n": 8,
+          "execution_accuracy": 0.75,
+          "projection_accuracy": 0.75,
+          "avg_attempts": 1.0
+        },
+        "比率类": {
+          "n": 5,
+          "execution_accuracy": 0.6,
+          "projection_accuracy": 0.8,
+          "avg_attempts": 1.0
+        },
+        "窗口函数": {
+          "n": 6,
+          "execution_accuracy": 1.0,
+          "projection_accuracy": 1.0,
+          "avg_attempts": 1.0
+        }
+      },
+      "failures": [
+        {
+          "id": "q017",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=5",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 8267
+        },
+        {
+          "id": "q021",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 8567
+        },
+        {
+          "id": "q029",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 7142
+        },
+        {
+          "id": "q031",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 7716
+        },
+        {
+          "id": "q041",
+          "category": "结果不对",
+          "compare_reason": "row_count",
+          "detail": "行数不同：gold=8，pred=64",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 9177
+        },
+        {
+          "id": "q043",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=3",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 7582
+        },
+        {
+          "id": "q046",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 9256
+        },
+        {
+          "id": "q047",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=5，pred=6",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 8848
+        }
+      ]
+    },
+    "baseline": {
+      "n": 52,
+      "execution_accuracy": 0.5962,
+      "projection_accuracy": 0.7885,
+      "sql_valid_rate": 1.0,
+      "self_repair_success_rate": null,
+      "repaired_runs": 0,
+      "avg_attempts": 1.0,
+      "avg_prompt_tokens": 1369.7,
+      "avg_completion_tokens": 138.6,
+      "avg_total_tokens": 1508.3,
+      "avg_cost_cny": 0.0038,
+      "total_cost_cny": 0.2001,
+      "total_latency_ms": 55320,
+      "p50_latency_ms": 999.0,
+      "p95_latency_ms": 1619.0,
+      "failure_categories": {
+        "结果不对": 21
+      },
+      "by_difficulty": {
+        "easy": {
+          "n": 13,
+          "execution_accuracy": 0.9231,
+          "avg_attempts": 1.0
+        },
+        "medium": {
+          "n": 26,
+          "execution_accuracy": 0.5,
+          "avg_attempts": 1.0
+        },
+        "hard": {
+          "n": 13,
+          "execution_accuracy": 0.4615,
+          "avg_attempts": 1.0
+        }
+      },
+      "correct": 31,
+      "exec_ok": 52,
+      "by_tag": {
+        "单表聚合": {
+          "n": 10,
+          "execution_accuracy": 0.9,
+          "projection_accuracy": 1.0,
+          "avg_attempts": 1.0
+        },
+        "复杂综合": {
+          "n": 8,
+          "execution_accuracy": 0.375,
+          "projection_accuracy": 0.75,
+          "avg_attempts": 1.0
+        },
+        "多表join": {
+          "n": 15,
+          "execution_accuracy": 0.6667,
+          "projection_accuracy": 0.9333,
+          "avg_attempts": 1.0
+        },
+        "时间序列": {
+          "n": 8,
+          "execution_accuracy": 0.5,
+          "projection_accuracy": 0.625,
+          "avg_attempts": 1.0
+        },
+        "比率类": {
+          "n": 5,
+          "execution_accuracy": 0.0,
+          "projection_accuracy": 0.2,
+          "avg_attempts": 1.0
+        },
+        "窗口函数": {
+          "n": 6,
+          "execution_accuracy": 0.8333,
+          "projection_accuracy": 0.8333,
+          "avg_attempts": 1.0
+        }
+      },
+      "failures": [
+        {
+          "id": "q007",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=3",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1043
+        },
+        {
+          "id": "q016",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1067
+        },
+        {
+          "id": "q017",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 734
+        },
+        {
+          "id": "q020",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1297
+        },
+        {
+          "id": "q021",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1437
+        },
+        {
+          "id": "q024",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 839
+        },
+        {
+          "id": "q027",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1031
+        },
+        {
+          "id": "q029",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1149
+        },
+        {
+          "id": "q030",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1399
+        },
+        {
+          "id": "q031",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1328
+        },
+        {
+          "id": "q035",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 994
+        },
+        {
+          "id": "q040",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1416
+        },
+        {
+          "id": "q041",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1663
+        },
+        {
+          "id": "q042",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1037
+        },
+        {
+          "id": "q043",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=6",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1571
+        },
+        {
+          "id": "q044",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1331
+        },
+        {
+          "id": "q045",
+          "category": "结果不对",
+          "compare_reason": "column_align",
+          "detail": "列内容无法一一对应（按值匹配失败）",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1281
+        },
+        {
+          "id": "q046",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=4，pred=5",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1619
+        },
+        {
+          "id": "q047",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=5，pred=6",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 1953
+        },
+        {
+          "id": "q048",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=2，pred=3",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 987
+        },
+        {
+          "id": "q050",
+          "category": "结果不对",
+          "compare_reason": "column_count",
+          "detail": "列数不同：gold=3，pred=4",
+          "error": null,
+          "attempts": 1,
+          "latency_ms": 976
+        }
+      ]
+    }
+  }
+}
